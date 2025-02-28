@@ -1,0 +1,3 @@
+Host (IP of the alu_server)
+IdentityFile ~/.ssh/school
+PasswordAuthentication no
