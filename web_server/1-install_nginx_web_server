@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#Updates the current state of the server
+#Installs Nginx on the server
+#Changes the user and user group ownership for editing file
+#overwrites the default page of nginx
+#restarts nginx
+apt-get -y update
+apt-get install -y nginx
+sudo chown -R $USER:$USER /var/www/html
+echo "Holberton School for the win!" > /var/www/html/index.html
+sudo chown -R root:root /var/www/html
+sudo service nginx restart
