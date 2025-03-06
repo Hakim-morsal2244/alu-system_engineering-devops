@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
-#Updates the current state of the server
-#Installs Nginx on the server
-#Changes the user and user group ownership for editing file
-#overwrites the default page of nginx
-#restarts nginx
-apt-get -y update
-apt-get install -y nginx
-sudo chown -R $USER:$USER /var/www/html
+# This script installs and configures Nginx web server on an Ubuntu machine
+
+# Update the package list and install nginx
+apt-get update -y
+apt-get install nginx -y
+
+# Make sure Nginx is listening on port 80
+ufw allow 'Nginx HTTP'
+
+# Start Nginx without using systemctl
+service nginx start
+
+# Check if Nginx is running
+netstat -tuln | grep :80
+
+# Modify the default web page to contain "Holberton School"
 echo "Holberton School for the win!" > /var/www/html/index.html
-sudo chown -R root:root /var/www/html
-sudo service nginx restart
