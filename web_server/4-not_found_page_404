@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Configure a new Nginx server to have a custom 404 page containing "Ceci n'est pas une page"
+
+# Step 1: Install Nginx if it's not already installed
+if ! command -v nginx &> /dev/null
+then
+    echo "Nginx is not installed. Installing..."
+    sudo apt update
+    sudo apt install -y nginx
+else
+    echo "Nginx is already installed."
+fi
+
+# Step 2: Create a custom 404 error page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+
+# Step 3: Set up the Nginx server block with custom 404 error page
+echo '
+server {
+    listen 80;
+    server_name morsalhakim.tech;
+
+    root /var/www/html;
+    index index.html index.htm;
+
+    # Custom 404 page
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+
+    # Other server configurations (if needed)
+}
+' | sudo tee /etc/nginx/sites-available/default > /dev/null
+
+# Step 4: Test the Nginx configuration for errors
+sudo nginx -t
+
+# Step 5: Reload Nginx to apply the changes
+# Using service instead of systemctl (for environments where systemctl may not be available)
+if command -v systemctl &> /dev/null
+then
+    sudo systemctl reload nginx
+else
+    sudo service nginx reload
+fi
+
+echo "Custom 404 page setup complete."
