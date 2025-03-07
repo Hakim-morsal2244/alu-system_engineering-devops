@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Step 1: Install Nginx if it's not already installed
+sudo apt update
+sudo apt install -y nginx
+
+# Step 2: Set up the redirection rule in Nginx configuration
+echo '
+server {
+    listen 80;
+    server_name morsalhakim.tech;
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+
+    # Other server configurations
+}
+' | sudo tee /etc/nginx/sites-available/default > /dev/null
+
+# Step 3: Reload Nginx to apply the changes
+sudo systemctl reload nginx
