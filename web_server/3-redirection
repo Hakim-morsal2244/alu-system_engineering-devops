@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#This script can automate nginx installation to a new machine and configure redirections.
+
+#install nginx to a new machine
+sudo apt update -y
+sudo apt install nginx -y
+
+#make redirection to another page
+sudo sed -i '/^\tserver_name.*;$/a \\n\        location /redirect_me {\n            return 301 http://www.gty.org;\n        }' /etc/nginx/sites-available/default
+
+sudo service nginx restart
