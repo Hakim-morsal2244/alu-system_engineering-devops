@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install nginx on your web-01 server
+# Install Nginx on the server
 apt-get -y update
 apt-get -y install nginx
 
@@ -15,5 +15,5 @@ echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html > /dev/n
 # Add the error page directive at the appropriate location
 echo "error_page 404 /custom_404.html;" | sudo tee -a /etc/nginx/sites-available/default > /dev/null
 
-# Restart nginx service to apply changes
+# Restart Nginx service to apply changes
 service nginx restart

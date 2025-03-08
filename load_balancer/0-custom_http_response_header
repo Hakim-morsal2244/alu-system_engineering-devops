@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Configure Nginx to add a custom HTTP header X-Served-By containing the hostname of the server
+
+# Step 1: Install Nginx if it's not already installed
+if ! command -v nginx &> /dev/null
+then
+    echo "Nginx is not installed. Installing..."
+    sudo apt update
+    sudo apt install -y nginx
+else
+    echo "Nginx is already installed."
+fi
+
+# Step 2: Get the hostname of the current server
+hostname=$(hostname)
+
+# Step 3: Configure Nginx to add the custom header X-Served-By
+echo "
+server {
+    listen 80;
+    server_name localhost;
+
+    # Add custom header with the hostname
+    more_set_headers \"X-Served-By: $hostname\";
+
+    # Other Nginx configurations (if needed)
+    root /var/www/html;
+    index index.html index.htm;
+}
+" | sudo tee /etc/nginx/sites-available/default > /dev/null
+
+# Step 4: Test the Nginx configuration for errors
+sudo nginx -t
+
+# Step 5: Reload Nginx to apply the changes
+# Using service instead of systemctl (for environments where systemctl may not be available)
+if command -v systemctl &> /dev/null
+then
+    sudo systemctl reload nginx
+else
+    sudo service nginx reload
+fi
+
+echo "Custom header X-Served-By configured to show hostname."
