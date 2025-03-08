@@ -1,19 +1,32 @@
 #!/usr/bin/env bash
-# Install Nginx on the server
+#Updates the current state of the server
+#Installs Nginx on the server
+#Changes the user and user group ownership for editing file
+#overwrites the default page of nginx
+#overwrites the default configuration file default
+#add a redirection and a location for the redirection
+#restarts nginx
 apt-get -y update
-apt-get -y install nginx
-
-# Set the content for the index page
-echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
-
-# Set the rewrite rule for redirection
-echo "rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" | sudo tee -a /etc/nginx/sites-available/default > /dev/null
-
-# Create the custom 404 page with the required string
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html > /dev/null
-
-# Add the error page directive at the appropriate location
-echo "error_page 404 /custom_404.html;" | sudo tee -a /etc/nginx/sites-available/default > /dev/null
-
-# Restart Nginx service to apply changes
-service nginx restart
+apt-get install -y nginx
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chown -R "$USER":"$USER" /etc/nginx/sites-available/default
+echo "Hello World!" > /var/www/html/index.html
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+echo "server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	root /var/www/html;
+	index index.html index.htm 404.html index.nginx-debian.html;
+	server_name _;
+	location /redirect_me {
+		return 301 https://www.youtube.com/watch?v=-VGIt10m9VQ;
+	}
+	location /xyz {
+		return 404;
+	}
+	error_page 404 /404.html;
+}" > /etc/nginx/sites-available/default
+sudo chown -R root:root /var/www/html
+sudo chown -R root:root /etc/nginx/sites-available/default
+sudo service nginx restart
+sudo service nginx reload
