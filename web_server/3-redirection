@@ -1,40 +1,12 @@
 #!/usr/bin/env bash
-# Configure a new Nginx server so that /redirect_me is redirecting to another page
-
-# Step 1: Install Nginx if it's not already installed
-if ! command -v nginx &> /dev/null
-then
-    echo "Nginx is not installed. Installing..."
-    sudo apt update
-    sudo apt install -y nginx
-else
-    echo "Nginx is already installed."
-fi
-
-# Step 2: Set up the redirection rule in Nginx configuration
-echo '
-server {
-    listen 80;
-    server_name morsalhakim.tech;
-
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
-
-    # Other server configurations (if needed)
-}
-' | sudo tee /etc/nginx/sites-available/default > /dev/null
-
-# Step 3: Test the Nginx configuration for errors
-sudo nginx -t
-
-# Step 4: Reload Nginx to apply the changes
-# Using service instead of systemctl (for environments where systemctl may not be available)
-if command -v systemctl &> /dev/null
-then
-    sudo systemctl reload nginx
-else
-    sudo service nginx reload
-fi
-
-echo "Redirection setup complete."
+#Updates the current state of the server
+#Installs Nginx on the server
+#Changes the user and user group ownership for editing file
+#overwrites the default page of nginx
+#restarts nginx
+apt-get -y update
+apt-get install -y nginx
+sudo chown -R $USER:$USER /var/www/html
+echo "Holberton School for the win!" > /var/www/html/index.html
+sudo chown -R root:root /var/www/html
+sudo service nginx restart
