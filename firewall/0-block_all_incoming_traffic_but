@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#installation of the ufw
+#denying incoming and outgoing traffics
+#except the TCP ports for HTTPS, HTTP and SSH
+sudo apt install ufw
+sudo ufw status
+sudo ufw enable
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 80/tcp
+sudo ufw status verbose
